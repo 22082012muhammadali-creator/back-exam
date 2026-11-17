@@ -6,7 +6,7 @@ const groupSchema = new Schema({
   lesson_start_time: { type: String, required: true },
   lesson_continuous: { type: String, required: true },
   lesson_week_day: { type: String, required: true },
-  group_stage_idint: { type: String, required: true },
+  group_stage_idint: { type: Schema.Types.ObjectId, ref: 'Stage', required: true },
   room_number: { type: String, required: true },
   room_floor: { type: Number, required: true },
   branch_id: { type: Schema.Types.ObjectId, ref: Branch, required: true },

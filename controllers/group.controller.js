@@ -94,10 +94,38 @@ const deleteGroup = async (req, res) => {
   }
 };
 
+const searchGroup = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await Group.find({
+      $or: [
+        { group_name: { $regex: query, $options: "i" } },
+        { room_number: { $regex: query, $options: "i" } },
+        { lesson_week_day: { $regex: query, $options: "i" } }
+      ]
+    }).populate("branch_id");
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Group not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching group:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch group" });
+  }
+};
+
 module.exports = {
   addGroup,
   getGroup,
   getGroupById,
   updateGroup,
-  deleteGroup
+  deleteGroup,
+  searchGroup
 };

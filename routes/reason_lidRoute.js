@@ -6,7 +6,8 @@ const {
   getReason_lid,
   getReasonLidById,
   updateReasonLid,
-  deleteReasonLid
+  deleteReasonLid,
+  searchReasonLid
 } = require("../controllers/reason_lid.controller");
 
 
@@ -156,5 +157,31 @@ reason_lid.put("/updateReasonLid/:id", validationSchema(updateReasonLidValidatio
  *         description: Ichki server xatosi
  */
 reason_lid.delete("/deleteReasonLid/:id", deleteReasonLid);
+
+/**
+ * @swagger
+ * /reason_lid/searchReasonLid:
+ *   get:
+ *     summary: Reason_lid larni qidirish
+ *     tags: [Reason_lid]
+ *     description: Reason_lid larni qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Reason_lid topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+reason_lid.get("/searchReasonLid", searchReasonLid);
 
 module.exports = { reason_lid };

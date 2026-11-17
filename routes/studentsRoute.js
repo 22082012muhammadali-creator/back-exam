@@ -6,7 +6,8 @@ const {
   getStudents,
   getStudentsById,
   updateStudents,
-  deleteStudents
+  deleteStudents,
+  searchStudents
 } = require("../controllers/students.controller");
 
 
@@ -176,5 +177,31 @@ students.put("/updateStudents/:id", validationSchema(updateStudentsValidationSch
  *         description: Ichki server xatosi
  */
 students.delete("/deleteStudents/:id", deleteStudents);
+
+/**
+ * @swagger
+ * /students/searchStudents:
+ *   get:
+ *     summary: Students larni qidirish
+ *     tags: [Students]
+ *     description: Students larni first_name, last_name, phone_number bo'yicha qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Students topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+students.get("/searchStudents", searchStudents);
 
 module.exports = { students };

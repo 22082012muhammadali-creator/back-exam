@@ -6,7 +6,8 @@ const {
   getGroup,
   getGroupById,
   updateGroup,
-  deleteGroup
+  deleteGroup,
+  searchGroup
 } = require("../controllers/group.controller");
 
 
@@ -192,5 +193,31 @@ group.put("/updateGroup/:id", validationSchema(updateGroupValidationSchema), upd
  *         description: Ichki server xatosi
  */
 group.delete("/deleteGroup/:id", deleteGroup);
+
+/**
+ * @swagger
+ * /group/searchGroup:
+ *   get:
+ *     summary: Group larni qidirish
+ *     tags: [Group]
+ *     description: Group larni group_name, room_number bo'yicha qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Group topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+group.get("/searchGroup", searchGroup);
 
 module.exports = { group };

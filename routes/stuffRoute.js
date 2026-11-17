@@ -6,7 +6,8 @@ const {
   getStuff,
   getStuffById,
   updateStuff,
-  deleteStuff
+  deleteStuff,
+  searchStuff
 } = require("../controllers/stuff.controller");
 
 
@@ -176,5 +177,31 @@ stuff.put("/updateStuff/:id", validationSchema(updateStuffValidationSchema), upd
  *         description: Ichki server xatosi
  */
 stuff.delete("/deleteStuff/:id", deleteStuff);
+
+/**
+ * @swagger
+ * /stuff/searchStuff:
+ *   get:
+ *     summary: Stuff larni qidirish
+ *     tags: [Stuff]
+ *     description: Stuff larni firstname, lastname, phone_number, login bo'yicha qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Stuff topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+stuff.get("/searchStuff", searchStuff);
 
 module.exports = { stuff };

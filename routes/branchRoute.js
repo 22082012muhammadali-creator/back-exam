@@ -6,7 +6,8 @@ const {
   getBranch,
   getBranchById,
   updateBranch,
-  deleteBranch
+  deleteBranch,
+  searchBranch
 } = require("../controllers/branch.controller");
 
 
@@ -164,5 +165,31 @@ branch.put("/updateBranch/:id", validationSchema(updateBranchValidationSchema), 
  *         description: Ichki server xatosi
  */
 branch.delete("/deleteBranch/:id", deleteBranch);
+
+/**
+ * @swagger
+ * /branch/searchBranch:
+ *   get:
+ *     summary: Branch larni qidirish
+ *     tags: [Branch]
+ *     description: Branch larni name, address, call_number bo'yicha qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Branch topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+branch.get("/searchBranch", searchBranch);
 
 module.exports = { branch };

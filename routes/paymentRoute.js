@@ -6,7 +6,8 @@ const {
   getPayment,
   getPaymentById,
   updatePayment,
-  deletePayment
+  deletePayment,
+  searchPayment
 } = require("../controllers/payment.controller");
 
 
@@ -176,5 +177,31 @@ payment.put("/updatePayment/:id", validationSchema(updatePaymentValidationSchema
  *         description: Ichki server xatosi
  */
 payment.delete("/deletePayment/:id", deletePayment);
+
+/**
+ * @swagger
+ * /payment/searchPayment:
+ *   get:
+ *     summary: Payment larni qidirish
+ *     tags: [Payment]
+ *     description: Payment larni price, is_paid, payment_date bo'yicha qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Payment topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+payment.get("/searchPayment", searchPayment);
 
 module.exports = { payment };

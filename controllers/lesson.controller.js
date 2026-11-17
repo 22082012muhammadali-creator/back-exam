@@ -91,10 +91,38 @@ const deleteLesson = async (req, res) => {
   }
 };
 
+const searchLesson = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await Lesson.find({
+      $or: [
+        { lesson_theme: { $regex: query, $options: "i" } },
+        { lesson_nuber: { $regex: query, $options: "i" } },
+        { lesson_date: { $regex: query, $options: "i" } }
+      ]
+    }).populate("group_id");
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Lesson not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching lesson:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch lesson" });
+  }
+};
+
 module.exports = {
   addLesson,
   getLesson,
   getLessonById,
   updateLesson,
-  deleteLesson
+  deleteLesson,
+  searchLesson
 };

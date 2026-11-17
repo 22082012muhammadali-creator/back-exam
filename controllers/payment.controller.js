@@ -93,10 +93,38 @@ const deletePayment = async (req, res) => {
   }
 };
 
+const searchPayment = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await Payment.find({
+      $or: [
+        { price: { $regex: query, $options: "i" } },
+        { is_paid: { $regex: query, $options: "i" } },
+        { payment_date: { $regex: query, $options: "i" } }
+      ]
+    }).populate("student_id");
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Payment not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching payment:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch payment" });
+  }
+};
+
 module.exports = {
   addPayment,
   getPayment,
   getPaymentById,
   updatePayment,
-  deletePayment
+  deletePayment,
+  searchPayment
 };

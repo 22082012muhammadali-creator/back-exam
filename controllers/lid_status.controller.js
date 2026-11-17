@@ -88,10 +88,36 @@ const deleteLidStatus = async (req, res) => {
   }
 };
 
+const searchLidStatus = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await Lid_status.find({
+      $or: [
+        { status: { $regex: query, $options: "i" } }
+      ]
+    });
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Lid_status not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching lid_status:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch lid_status" });
+  }
+};
+
 module.exports = {
   addLid_status,
   getLid_status,
   getLidStatusById,
   updateLidStatus,
-  deleteLidStatus
+  deleteLidStatus,
+  searchLidStatus
 };

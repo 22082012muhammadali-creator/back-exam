@@ -93,10 +93,38 @@ const deleteStudents = async (req, res) => {
   }
 };
 
+const searchStudents = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await Students.find({
+      $or: [
+        { first_name: { $regex: query, $options: "i" } },
+        { last_name: { $regex: query, $options: "i" } },
+        { phone_number: { $regex: query, $options: "i" } }
+      ]
+    }).populate("lid_id");
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Students not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch students" });
+  }
+};
+
 module.exports = {
   addStudents,
   getStudents,
   getStudentsById,
   updateStudents,
-  deleteStudents
+  deleteStudents,
+  searchStudents
 };

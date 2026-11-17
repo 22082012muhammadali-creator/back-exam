@@ -6,7 +6,8 @@ const {
   getLid,
   getLidById,
   updateLid,
-  deleteLid
+  deleteLid,
+  searchLid
 } = require("../controllers/lid.controller");
 
 
@@ -192,5 +193,31 @@ lid.put("/updateLid/:id", validationSchema(updateLidValidationSchema), updateLid
  *         description: Ichki server xatosi
  */
 lid.delete("/deleteLid/:id", deleteLid);
+
+/**
+ * @swagger
+ * /lid/searchLid:
+ *   get:
+ *     summary: Lid larni qidirish
+ *     tags: [Lid]
+ *     description: Lid larni firstname, lastname, phone_number bo'yicha qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Lid topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+lid.get("/searchLid", searchLid);
 
 module.exports = { lid };

@@ -90,10 +90,38 @@ const deleteBranch = async (req, res) => {
   }
 };
 
+const searchBranch = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await Branch.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { address: { $regex: query, $options: "i" } },
+        { call_number: { $regex: query, $options: "i" } }
+      ]
+    });
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Branch not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching branch:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch branch" });
+  }
+};
+
 module.exports = {
   addBranch,
   getBranch,
   getBranchById,
   updateBranch,
-  deleteBranch
+  deleteBranch,
+  searchBranch
 };

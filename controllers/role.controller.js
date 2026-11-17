@@ -88,10 +88,9 @@ const deleteRole = async (req, res) => {
   }
 };
 
-// -------------Search Role---------------
 const searchRole = async (req, res) => {
   try {
-    const { search_query } = req.query;
+    const search_query = req.query.query || req.query.search_query;
 
     if (!search_query || typeof search_query !== "string") {
       return res.status(400).json({ success: false, message: "Invalid search query" });

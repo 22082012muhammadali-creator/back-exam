@@ -88,10 +88,36 @@ const deleteReasonLid = async (req, res) => {
   }
 };
 
+const searchReasonLid = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await reason_lid.find({
+      $or: [
+        { reason_lid: { $regex: query, $options: "i" } }
+      ]
+    });
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Reason_lid not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching reason_lid:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch reason_lid" });
+  }
+};
+
 module.exports = {
   addReason_lid,
   getReason_lid,
   getReasonLidById,
   updateReasonLid,
-  deleteReasonLid
+  deleteReasonLid,
+  searchReasonLid
 };

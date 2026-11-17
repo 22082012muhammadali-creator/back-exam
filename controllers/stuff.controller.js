@@ -93,10 +93,39 @@ const deleteStuff = async (req, res) => {
   }
 };
 
+const searchStuff = async (req, res) => {
+  try {
+    const query = req.query.query || req.query.search_query;
+
+    if (!query || typeof query !== "string") {
+      return res.status(400).json({ success: false, message: "Invalid search query" });
+    }
+
+    const result = await Stuff.find({
+      $or: [
+        { firstname: { $regex: query, $options: "i" } },
+        { lastname: { $regex: query, $options: "i" } },
+        { phone_number: { $regex: query, $options: "i" } },
+        { login: { $regex: query, $options: "i" } }
+      ]
+    });
+
+    if (result.length === 0) {
+      return res.status(404).json({ success: false, message: "Stuff not found" });
+    }
+
+    res.status(200).json({ success: true, inner_data: result });
+  } catch (err) {
+    console.error("Error fetching stuff:", err);
+    res.status(500).json({ success: false, message: "Server error: Failed to fetch stuff" });
+  }
+};
+
 module.exports = {
   addStuff,
   getStuff,
   getStuffById,
   updateStuff,
-  deleteStuff
+  deleteStuff,
+  searchStuff
 };

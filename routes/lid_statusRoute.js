@@ -6,7 +6,8 @@ const {
   getLid_status,
   getLidStatusById,
   updateLidStatus,
-  deleteLidStatus
+  deleteLidStatus,
+  searchLidStatus
 } = require("../controllers/lid_status.controller");
 
 
@@ -156,5 +157,31 @@ lid_status.put("/updateLidStatus/:id", validationSchema(updateLidStatusValidatio
  *         description: Ichki server xatosi
  */
 lid_status.delete("/deleteLidStatus/:id", deleteLidStatus);
+
+/**
+ * @swagger
+ * /lid_status/searchLidStatus:
+ *   get:
+ *     summary: Lid_status larni qidirish
+ *     tags: [Lid_status]
+ *     description: Lid_status larni status bo'yicha qidirish
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         required: true
+ *         description: Qidiruv so'rovi
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Qidiruv natijalari muvaffaqiyatli qaytarildi
+ *       '400':
+ *         description: Qidiruv so'rovi kiritilmagan
+ *       '404':
+ *         description: Lid_status topilmadi
+ *       '500':
+ *         description: Ichki server xatosi
+ */
+lid_status.get("/searchLidStatus", searchLidStatus);
 
 module.exports = { lid_status };
